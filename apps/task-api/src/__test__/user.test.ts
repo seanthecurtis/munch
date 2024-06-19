@@ -8,7 +8,6 @@ import { EnvVariables } from "../types/default"
 import initDatabase from "../database/sequelize"
 import { syncModels } from "../models/models"
 import * as userService from "../services/userService"
-import { UserRegisterService } from "../services/userService"
 
 dotenv.config({ path: "./src/__test__/.env" })
 
@@ -58,7 +57,7 @@ test("user register with mock data", async (t) => {
   const password = faker.internet.password()
 
   const stub = ImportMock.mockClass(userService,"UserRegisterService")
-  stub.mock('userRegister', {message: "Registration successful"})
+  stub.mock("userRegister", {message: "Registration successful"})
   const response = await fastify.inject({
     method: "POST",
     url: "api/users/register",
@@ -71,5 +70,5 @@ test("user register with mock data", async (t) => {
   t.equal(response.statusCode, 201)
   const jsonResponse = response.json()
   t.equal(jsonResponse.message, "Registration successful")
-  stub.restore();
+  stub.restore()
 })

@@ -40,13 +40,13 @@ async function main() {
 
 async function shutdown(){
   try{
-  if(fastify) await fastify.close()
-  if(db) await db.close()
+    if(fastify) await fastify.close()
+    if(db) await db.close()
     process.exit(0)
-} catch(err){
-  console.error("Failed to shutdown\n", err)
-  process.exit(0);
-}
+  } catch(err){
+    console.error("Failed to shutdown\n", err)
+    process.exit(0)
+  }
 }
 
 process.on("SIGINT", shutdown)
