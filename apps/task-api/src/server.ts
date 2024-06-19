@@ -1,5 +1,6 @@
 import Fastify from "fastify"
 import healthcheckRoutes from "./routes/healthCheckRoutes"
+import userRoutes from "./routes/userRoutes"
 
 function buildServer(logger: boolean) {
   const server = Fastify({
@@ -7,6 +8,7 @@ function buildServer(logger: boolean) {
   })
 
   server.register(healthcheckRoutes, { prefix: "healthcheck" })
+  server.register(userRoutes, { prefix: "api/users" })
 
   return server
 }
