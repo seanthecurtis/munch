@@ -1,0 +1,7 @@
+TAP version 14
+{ API_PORT: [32m'3002'[39m, API_HOST: [32m'0.0.0.0'[39m, ENABLE_LOGGING: [32m'false'[39m }
+# Subtest: healthcheck
+    1..0
+ok 1 - healthcheck # time=6.025ms
+
+1..1
