@@ -1,0 +1,18 @@
+services:
+  taskdb:
+    image: mysql:latest
+    container_name: taskdb
+    environment:
+      MYSQL_ROOT_PASSWORD: task
+      MYSQL_DATABASE: taskdb
+    ports:
+      - "3306:3306"  # Map container port 3306 to host port 3306
+
+  testdb:
+    image: mysql:latest
+    container_name: testdb
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: taskdb
+    ports:
+      - "3307:3306"  # Map container port 3306 to host port 3307 for testdb
