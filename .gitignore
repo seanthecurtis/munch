@@ -70,5 +70,5 @@ node_modules
 
 # Local items
 .env
-
+.tap
 local_notes
