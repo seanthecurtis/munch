@@ -12,6 +12,7 @@ export type EnvVariables = {
   JWT_TOKEN: string
   COOKIE_SECRET: string
   API_KEY: string
+  MYSQL_HOST: string
 };
 
 declare module "fastify" {
@@ -31,3 +32,5 @@ declare module "@fastify/jwt" {
     user: UserPayload
   }
 }
+
+export type AuthFunction = (request: FastifyRequest, reply: FastifyReply) => Promise<void>;

@@ -6,6 +6,7 @@ import buildServer from "./server"
 import { EnvVariables } from "./types/default"
 import initDatabase from "./database/sequelize"
 import { syncModels } from "./models/models"
+import { authenticate } from "./middleware/auth"
 
 dotenv.config()
 // Fetch env vars
@@ -19,11 +20,12 @@ const env: EnvVariables = {
   MYSQL_ROOT_USER: process.env.MYSQL_ROOT_USER as string,
   JWT_TOKEN: process.env.JWT_TOKEN as string,
   COOKIE_SECRET: process.env.COOKIE_SECRET as string,
-  API_KEY: process.env.API_KEY as string
+  API_KEY: process.env.API_KEY as string,
+  MYSQL_HOST: process.env.MYSQL_HOST as string
 }
 
 // Create fastify instance
-const fastify = buildServer(env)
+const fastify = buildServer(env, authenticate)
 const db = initDatabase(env)
 
 async function main() {
