@@ -16,3 +16,17 @@ services:
       MYSQL_DATABASE: taskdb
     ports:
       - "3307:3306"  # Map container port 3306 to host port 3307 for testdb
+
+  api:
+    build:
+      context: .  # Assuming your Dockerfile is in the root directory
+      dockerfile: Dockerfile
+    container_name: api
+    env_file:
+      - .env
+    environment:
+      - MYSQL_HOST=taskdb
+    ports:
+      - "3001:3001"  # Map container port 3000 to host port 3000
+    depends_on:
+      - taskdb

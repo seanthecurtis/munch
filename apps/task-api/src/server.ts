@@ -1,9 +1,9 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify"
+import Fastify from "fastify"
 import healthcheckRoutes from "./routes/healthCheckRoutes"
 import userRoutes from "./routes/userRoutes"
-import fjwt, { FastifyJWT } from "@fastify/jwt"
+import fjwt from "@fastify/jwt"
 import fCookie from "@fastify/cookie"
-import { EnvVariables } from "./types/default"
+import { EnvVariables, AuthFunction } from "./types/default"
 import taskRoutes from "./routes/taskRoutes"
 import Ajv from "ajv"
 import ajvErrors from "ajv-errors"
@@ -15,7 +15,7 @@ const ajv = new Ajv({
 })
 ajvErrors(ajv)
 
-function buildServer(env: EnvVariables) {
+function buildServer(env: EnvVariables, authFunction: AuthFunction) {
   const server = Fastify({
     logger: env.ENABLE_LOGGING,
     ajv: {
@@ -44,18 +44,7 @@ function buildServer(env: EnvVariables) {
     return next()
   })
 
-  // jwt validation
-  server.decorate(
-    "authenticate",
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      const token = request.cookies.access_token
-      if (!token) {
-        return reply.status(401).send({ message: "Authentication required" })
-      }
-      const decoded = request.jwt.verify<FastifyJWT["user"]>(token)
-      request.user = decoded
-    },
-  )
+  server.decorate("authenticate", authFunction)
 
   // endpoints
   server.register(healthcheckRoutes, { prefix: "healthcheck" })

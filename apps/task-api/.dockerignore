@@ -1,0 +1,14 @@
+# Ignore node_modules (typically this is built during docker build)
+node_modules
+
+# Ignore test directory
+__test__
+
+# Ignore other files/directories
+.git
+.DS_Store
+.env
+docker-compose.yml
+*.log
+dist
+tap

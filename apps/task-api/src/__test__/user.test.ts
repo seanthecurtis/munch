@@ -8,6 +8,7 @@ import { EnvVariables } from "../types/default"
 import initDatabase from "../database/sequelize"
 import { syncModels } from "../models/models"
 import * as userService from "../services/userService"
+import { authenticate } from "../middleware/auth"
 
 dotenv.config({ path: "./src/__test__/.env" })
 
@@ -21,13 +22,14 @@ const env: EnvVariables = {
   MYSQL_ROOT_USER: process.env.MYSQL_ROOT_USER as string,
   JWT_TOKEN: process.env.JWT_TOKEN as string,
   COOKIE_SECRET: process.env.COOKIE_SECRET as string,
-  API_KEY: process.env.API_KEY as string
+  API_KEY: process.env.API_KEY as string,
+  MYSQL_HOST: process.env.MYSQL_HOST as string
 }
 
 test("user register and login with database connection", async (t) => {
   try {
     // Create fastify instance
-    const fastify = buildServer(env)
+    const fastify = buildServer(env, authenticate)
     t.teardown(async ()=>{
       await fastify.close()
     })
@@ -81,7 +83,7 @@ test("user register and login with database connection", async (t) => {
 test("user register with mock data", async (t) => {
   try{
     // Create fastify instance
-    const fastify = buildServer(env)
+    const fastify = buildServer(env, authenticate)
     t.teardown(async ()=>{
       await fastify.close()
     })
@@ -118,7 +120,7 @@ test("user register with mock data", async (t) => {
 test("user register fail with mock data: email required", async (t) => {
   try{
   // Create fastify instance
-    const fastify = buildServer(env)
+    const fastify = buildServer(env, authenticate)
     t.teardown(async ()=> {
       await fastify.close()
     })
@@ -140,7 +142,7 @@ test("user register fail with mock data: email required", async (t) => {
 
     t.equal(response.statusCode, 400)
     const jsonResponse = response.json()
-    t.equal(jsonResponse.message, "body must have required property 'email'")
+    t.equal(jsonResponse.message, "body Email is required")
     stub.restore()
   } catch(err){
     t.fail(err as string)
