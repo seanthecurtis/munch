@@ -8,7 +8,7 @@ function initDatabase(config: EnvVariables){
     username: config.MYSQL_ROOT_USER,
     password: config.MYSQL_ROOT_PASSWORD,
     port: Number(config.MYSQL_PORT),
-    logging: (config.ENABLE_LOGGING === "true")
+    logging: config.ENABLE_LOGGING
   })
   return sequelize
 }

@@ -35,8 +35,7 @@ export function initUserModel(sequelize: Sequelize){
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
   },
   {
