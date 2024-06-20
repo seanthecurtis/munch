@@ -1,4 +1,5 @@
 export const userRegisterSchema = {
+  $id: "userRegisterSchema",
   body: {
     type: "object",
     required: ["email", "password"],
