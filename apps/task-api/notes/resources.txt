@@ -4,4 +4,7 @@ https://www.youtube.com/watch?v=gq8ZQrBJb2M
 https://fastify.dev/docs/latest/Reference/TypeScript/
 https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/
 
+// swagger
+https://www.youtube.com/shorts/EV4Kv6O6FEA
+
 Plenty of time spent on https://stackoverflow.com/ :D

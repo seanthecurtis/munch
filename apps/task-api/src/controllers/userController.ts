@@ -12,7 +12,6 @@ export async function userRegisterHandler(request: FastifyRequest, reply: Fastif
       return reply.status(201).send({message: "Registration successful"})
     }
   }catch(err){
-    console.log(err)
     return reply.status(400).send({message: "Failed to register user"})
   }
 }

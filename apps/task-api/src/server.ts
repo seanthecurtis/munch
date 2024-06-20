@@ -5,11 +5,23 @@ import fjwt, { FastifyJWT } from "@fastify/jwt"
 import fCookie from "@fastify/cookie"
 import { EnvVariables } from "./types/default"
 import taskRoutes from "./routes/taskRoutes"
-import { Schemas } from "./schemas/schemas"
+import Ajv from "ajv"
+import ajvErrors from "ajv-errors"
+import { taskCreateSchema, taskUpdateSchema, userLoginSchema, userRegisterSchema } from "./schemas/schemas"
+
+const ajv = new Ajv({
+  allErrors: true, // Report all errors in validation
+  coerceTypes: true, // Coerce JSON types to match schema types
+})
+ajvErrors(ajv)
 
 function buildServer(env: EnvVariables) {
   const server = Fastify({
-    logger: env.ENABLE_LOGGING
+    logger: env.ENABLE_LOGGING,
+    ajv: {
+      customOptions: { allErrors: true },
+      plugins: [ajvErrors],
+    }
   })
 
   // api-key validation
@@ -37,13 +49,11 @@ function buildServer(env: EnvVariables) {
     "authenticate",
     async (request: FastifyRequest, reply: FastifyReply) => {
       const token = request.cookies.access_token
-      console.log(token)
       if (!token) {
         return reply.status(401).send({ message: "Authentication required" })
       }
       const decoded = request.jwt.verify<FastifyJWT["user"]>(token)
       request.user = decoded
-      console.log(request.user)
     },
   )
 
@@ -60,9 +70,10 @@ function buildServer(env: EnvVariables) {
   })
 
   // schemas
-  for (const schema of [...Schemas]) {
-    server.addSchema(schema)
-  }
+  server.addSchema(userRegisterSchema)
+  server.addSchema(userLoginSchema)
+  server.addSchema(taskCreateSchema)
+  server.addSchema(taskUpdateSchema)
 
   return server
 }

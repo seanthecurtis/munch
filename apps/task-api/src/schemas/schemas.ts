@@ -1,39 +1,138 @@
-import { z } from "zod"
-import { buildJsonSchemas } from "fastify-zod"
+export const userRegisterSchema = {
+  $id: "registerSchema",
+  body: {
+    type: "object",
+    required: ["email", "password"],
+    properties: {
+      email: { type: "string", format: "email", errorMessage: "Invalid email format" },
+      password: {
+        type: "string",
+        minLength: 8,
+        maxLength: 128,
+        errorMessage: {
+          minLength: "Password must be at least 8 characters long"
+        }
+      }
+    },
+    errorMessage: {
+      required: {
+        email: "Email is required",
+        password: "Password is required"
+      }
+    }
+  }
+}
 
-// User schemas
-const userRegisterSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-  status: z.string().optional().default("active"),
-})
+export const userLoginSchema = {
+  $id: "loginSchema",
+  body: {
+    type: "object",
+    required: ["email", "password"],
+    properties: {
+      email: { type: "string", format: "email", errorMessage: "Invalid email format" },
+      password: {
+        type: "string",
+      }
+    },
+    errorMessage: {
+      required: {
+        email: "Email is required",
+        password: "Password is required"
+      }
+    }
+  }
+}
 
-const userLoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-})
+export const taskCreateSchema = {
+  $id: "taskCreateSchema",
+  body: {
+    type: "object",
+    required: ["title", "dueDate"],
+    properties: {
+      title: { 
+        type: "string", 
+        maxLength: 100, 
+        minLength: 1,
+        errorMessage: {
+          minLength: "Title may not be empty.",
+          maxLength: "Title exceeds 100 characters."
+        }
+      },
+      userId: {
+        type: "number"
+      },
+      description: {
+        type: "string",
+        minLength: 1,
+        maxLength: 255,
+        errorMessage: {
+          minLength: "Description may not be empty.",
+          maxLength: "Description exceeds 255 characters."
+        }
+      },
+      dueDate: {
+        type: "string"
+      },
+      priority: {
+        type: "string",
+        enum: ["low", "medium", "high"],
+        default: "low",
+        errorMessage: {
+          enum: "Priority options: low, medium, high."
+        }
+      },
+      status: {
+        type: "string",
+        enum: ["open", "in progress", "completed"],
+        default: "open",
+        errorMessage: {
+          enum: "Status options: 'open', 'in progress', 'completed'."
+        }
+      },
+    },
+    errorMessage: {
+      required: {
+        title: "Title is required",
+        due_date: "A due date is required",
+      }
+    }
+  }
+}
 
-// Task schemas
-const taskCreateSchema = z.object({
-  title: z.string().min(1),
-  userId: z.number().optional(),
-  description: z.string().optional(),
-  priority: z.enum(["low", "medium", "high"]).optional().default("low"),
-  dueDate: z.string().regex(/^\d{4}-(0\d|1[0-2])-(0\d|1\d|2\d|3[01])$/),
-  status: z.enum(["open", "in progress", "completed"]).optional().default("open")
-})
 
-const taskUpdateSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().optional(),
-  priority: z.enum(["low", "medium", "high"]).optional(),
-  dueDate: z.string().regex(/^\d{4}-(0\d|1[0-2])-(0\d|1\d|2\d|3[01])$/),
-  status: z.enum(["open", "in progress", "completed"]).optional(),
-})
-
-export const { schemas: Schemas, $ref } = buildJsonSchemas({
-  taskCreateSchema,
-  userRegisterSchema,
-  userLoginSchema,
-  taskUpdateSchema,
-})
+export const taskUpdateSchema = {
+  $id: "taskUpdateSchema",
+  body: {
+    type: "object",
+    properties: {
+      title: { 
+        type: "string", 
+        maxLength: 100, 
+        minLength: 1,
+        errorMessage: {
+          minLength: "Title may not be empty.",
+          maxLength: "Title exceeds 100 characters."
+        }
+      },
+      description: {
+        type: "string",
+        minLength: 1,
+        maxLength: 255,
+        errorMessage: {
+          minLength: "Description may not be empty.",
+          maxLength: "Description exceeds 255 characters."
+        }
+      },
+      dueDate: {
+        type: "string"
+      },
+      priority: {
+        type: "string",
+        enum: ["Low", "Medium", "High"],
+        errorMessage: {
+          enum: "Priority options: low, medium, high."
+        }
+      },
+    }
+  }
+}

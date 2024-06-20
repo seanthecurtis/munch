@@ -1,26 +1,16 @@
 import { FastifyInstance } from "fastify"
 import { taskCreateHandler, taskUpdateHandler } from "../controllers/taskController"
-import { $ref } from "../schemas/schemas"
+import { taskCreateSchema, taskUpdateSchema } from "../schemas/schemas"
 
 async function taskRoutes(server: FastifyInstance) {
   server.post(
     "/",
-    {
-      preHandler: [server.authenticate],
-      schema: {
-        body: $ref("taskCreateSchema")
-      }
-    }, 
+    {preHandler: [server.authenticate], schema: taskCreateSchema}, 
     taskCreateHandler
   )
   server.put(
     "/",
-    {
-      preHandler: [server.authenticate],
-      schema: {
-        body: $ref("taskUpdateSchema")
-      }
-    }, 
+    {preHandler: [server.authenticate], schema: taskUpdateSchema},
     taskUpdateHandler
   )
 }
