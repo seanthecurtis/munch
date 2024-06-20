@@ -1,3 +1,4 @@
+// Import dependencies
 import { FastifyRequest } from "fastify"
 
 export const mockAuthenticate = async (request: FastifyRequest) => {

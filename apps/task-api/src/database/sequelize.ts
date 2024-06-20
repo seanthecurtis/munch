@@ -1,7 +1,16 @@
+// Import dependencies
 import { Sequelize } from "sequelize"
+
+// Import custom
 import { EnvVariables } from "../types/default"
 
-function initDatabase(config: EnvVariables){
+/**
+ * Initialize Sequelize database connection based on provided configuration.
+ *
+ * @param {EnvVariables} config - Configuration object containing database connection details.
+ * @returns {Sequelize} Initialized Sequelize instance.
+ */
+function initDatabase(config: EnvVariables): Sequelize {
   const sequelize = new Sequelize({
     database: config.MYSQL_DATABASE,
     dialect: "mysql",

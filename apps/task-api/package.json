@@ -11,7 +11,8 @@
     "lint": "eslint . --ext .ts --fix",
     "build": "npm run clean && npm run lint && tsc",
     "start": "npm run build && nodemon --exec ts-node src/index.ts",
-    "test": "npx tap ./src/__test__/**/*.test.ts"
+    "test": "npx tap ./src/__test__/**/*.test.ts",
+    "jsdocs": "ts-node ./node_modules/.bin/jsdoc -c jsdoc.json"
   },
   "keywords": [],
   "author": "",
@@ -38,6 +39,7 @@
     "ajv-errors": "^3.0.0",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.0",
+    "fastify-swagger": "^5.2.0",
     "fastify-zod": "^1.4.0",
     "mysql2": "^3.10.1",
     "sequelize": "^6.37.3",

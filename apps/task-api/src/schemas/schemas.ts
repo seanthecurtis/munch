@@ -1,3 +1,6 @@
+/**
+ * Schema for user registration.
+ */
 export const userRegisterSchema = {
   $id: "registerSchema",
   body: {
@@ -23,6 +26,9 @@ export const userRegisterSchema = {
   }
 }
 
+/**
+ * Schema for user login.
+ */
 export const userLoginSchema = {
   $id: "loginSchema",
   body: {
@@ -43,15 +49,18 @@ export const userLoginSchema = {
   }
 }
 
+/**
+ * Schema for creating a task.
+ */
 export const taskCreateSchema = {
   $id: "taskCreateSchema",
   body: {
     type: "object",
     required: ["title", "dueDate"],
     properties: {
-      title: { 
-        type: "string", 
-        maxLength: 100, 
+      title: {
+        type: "string",
+        maxLength: 100,
         minLength: 1,
         errorMessage: {
           minLength: "Title may not be empty.",
@@ -99,15 +108,17 @@ export const taskCreateSchema = {
   }
 }
 
-
+/**
+ * Schema for updating a task.
+ */
 export const taskUpdateSchema = {
   $id: "taskUpdateSchema",
   body: {
     type: "object",
     properties: {
-      title: { 
-        type: "string", 
-        maxLength: 100, 
+      title: {
+        type: "string",
+        maxLength: 100,
         minLength: 1,
         errorMessage: {
           minLength: "Title may not be empty.",
