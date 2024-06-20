@@ -1,0 +1,7 @@
+https://medium.com/@codingsprint/how-to-hash-a-password-in-nodejs-using-crypto-package-c4deed66f814#:~:text=generatePassword(password)%20%3A%20in%20this,in%20db%20for%20future%20use.
+https://medium.com/@atatijr/token-based-authentication-with-fastify-jwt-and-typescript-1fa5cccc63c5
+https://www.youtube.com/watch?v=gq8ZQrBJb2M
+https://fastify.dev/docs/latest/Reference/TypeScript/
+https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/
+
+Plenty of time spent on https://stackoverflow.com/ :D

@@ -19,30 +19,52 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
+
+  static initialize(sequelize: Sequelize) {
+    User.init({
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+    },
+    {
+      tableName: "users",
+      timestamps: true,
+      sequelize,
+      indexes: [
+        {
+          name: "u_users_email",
+          unique: true,
+          fields: ["email"],
+        }
+      ],
+    })
+  }
+
+  // Custom findall method to remove fields from display
+  static findAllFiltered(exclude: string[]) {
+    return User.findAll({
+      attributes: { exclude }
+    })
+  }
+  static findByPkFiltered(id: string, exclude: string[]) {
+    return User.findByPk(id,{
+      attributes: { exclude }
+    })
+  }
 }
 
-export function initUserModel(sequelize: Sequelize){
-  User.init({
-    id: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-  },
-  {
-    tableName: "users",
-    timestamps: true,
-    sequelize
-  })
+export function initUserModel(sequelize: Sequelize) {
+  User.initialize(sequelize)
   return User
 }
 

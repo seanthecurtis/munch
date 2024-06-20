@@ -45,6 +45,9 @@ test("user register and login with database connection", async (t) => {
       payload: {
         email,
         password
+      },
+      headers: {
+        "x-api-key": env.API_KEY
       }
     })
 
@@ -58,6 +61,9 @@ test("user register and login with database connection", async (t) => {
       payload: {
         email,
         password
+      },
+      headers: {
+        "x-api-key": env.API_KEY
       }
     })
 
@@ -91,6 +97,9 @@ test("user register with mock data", async (t) => {
       payload: {
         email,
         password
+      },
+      headers: {
+        "x-api-key": env.API_KEY
       }
     })
 
@@ -123,6 +132,9 @@ test("user register fail with mock data: email required", async (t) => {
       url: "api/users/register",
       payload: {
         password
+      },
+      headers: {
+        "x-api-key": env.API_KEY
       }
     })
 
