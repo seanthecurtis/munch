@@ -1,6 +1,8 @@
+// Import dependencies
 import { test }  from "tap"
 import dotenv from "dotenv"
 
+// Import custom
 import buildServer from "../server"
 import { EnvVariables } from "../types/default"
 import { authenticate } from "../middleware/auth"
@@ -18,7 +20,8 @@ const env: EnvVariables = {
   JWT_TOKEN: process.env.JWT_TOKEN as string,
   COOKIE_SECRET: process.env.COOKIE_SECRET as string,
   API_KEY: process.env.API_KEY as string,
-  MYSQL_HOST: process.env.MYSQL_HOST as string
+  MYSQL_HOST: process.env.MYSQL_HOST as string,
+  API_URL: process.env.API_URL as string
 }
 
 test("invalid api key", async (t) => {

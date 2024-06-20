@@ -1,8 +1,10 @@
+// Import dependencies
 import { test }  from "tap"
 import dotenv from "dotenv"
 import { faker } from "@faker-js/faker"
 import { ImportMock } from "ts-mock-imports"
 
+// Import custom
 import buildServer from "../server"
 import { EnvVariables } from "../types/default"
 import initDatabase from "../database/sequelize"
@@ -23,7 +25,8 @@ const env: EnvVariables = {
   JWT_TOKEN: process.env.JWT_TOKEN as string,
   COOKIE_SECRET: process.env.COOKIE_SECRET as string,
   API_KEY: process.env.API_KEY as string,
-  MYSQL_HOST: process.env.MYSQL_HOST as string
+  MYSQL_HOST: process.env.MYSQL_HOST as string,
+  API_URL: process.env.API_URL as string
 }
 
 test("user register and login with database connection", async (t) => {

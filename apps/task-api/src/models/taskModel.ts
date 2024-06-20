@@ -1,20 +1,29 @@
+// Import dependencies
 import { DataTypes, Model, Optional, Sequelize } from "sequelize"
+
+// Import custom model
 import User from "./userModel"
 
+// Define attributes of a task
 interface TaskAttributes {
   id: number;
-  userId: number,
-  title: string,
-  description: string,
-  dueDate: string,
-  priority: string,
+  userId: number;
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: string;
   status?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// Define input for creating/updating a task (optional attributes)
 export interface TaskInput extends Optional<TaskAttributes, "id"> {}
+
+// Define output for retrieving a task (all required attributes)
 export interface TaskOutput extends Required<TaskAttributes> {}
 
+// Task model class extending Sequelize Model and implementing TaskAttributes
 class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
   public id!: number
   public userId!: number
@@ -27,13 +36,16 @@ class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
+  // Define association with User model
   static associate(models: { User: typeof User }) {
     Task.belongsTo(models.User, {
       foreignKey: "userId",
       as: "user",
     })
   }
-  static initialize(sequelize: Sequelize){
+
+  // Initialize the Task model in Sequelize
+  static initialize(sequelize: Sequelize) {
     Task.init({
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -44,52 +56,50 @@ class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: "users",
-          key: "id",
+          model: "users", // Referencing the users table
+          key: "id", // Referencing the id column in the users table
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
       title: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       description: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: true,
       },
       dueDate: {
         type: DataTypes.DATEONLY,
-        allowNull: true
+        allowNull: true,
       },
       priority: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
-      tableName: "tasks",
-      timestamps: true,
-      sequelize,
-      // specify index names - sequelize adds new indexes every time with sync
-      // indexes: [
-      //   {
-      //     name: "u_users_email",
-      //     unique: true,
-      //     fields: ["email"],
-      //   }
-      // ],
+      tableName: "tasks", // Define the table name in the database
+      timestamps: true, // Include timestamps (createdAt and updatedAt)
+      sequelize, // Pass the Sequelize instance
     })
   }
 }
 
-export function initTaskModel(sequelize: Sequelize){
-  Task.initialize(sequelize)
-  return Task
+/**
+ * Initializes the Task model in the provided Sequelize instance.
+ *
+ * @param {Sequelize} sequelize - The Sequelize instance to initialize the Task model in.
+ * @returns {typeof Task} The initialized Task model class.
+ */
+export function initTaskModel(sequelize: Sequelize): typeof Task {
+  Task.initialize(sequelize) // Initialize the Task model
+  return Task // Return the Task model class
 }
 
-export default Task
+export default Task // Export the Task model class by default
