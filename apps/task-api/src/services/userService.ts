@@ -31,11 +31,17 @@ export class UserService {
   // /api/users/:id
   // Fetch user by id
   async userGetOneById(id: string){
-    const user = await User.findByPk(id)
+    const user = await User.findByPkFiltered(id, ["password"])
     if(!user){
       return {}
     }
     return user
+  }
+
+  // GET /api/users
+  async userList(){
+    const users = await User.findAllFiltered(["password"])
+    return users
   }
 
   // Helpers
