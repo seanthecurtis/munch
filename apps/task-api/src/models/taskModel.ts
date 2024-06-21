@@ -1,7 +1,4 @@
-// Import dependencies
 import { DataTypes, Model, Optional, Sequelize } from "sequelize"
-
-// Import custom model
 import User from "./userModel"
 
 // Define attributes of a task
@@ -80,7 +77,7 @@ class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
       },
       status: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
     },
     {

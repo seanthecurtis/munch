@@ -1,49 +1,68 @@
-/**
- * Import dependencies
- */
 import { FastifyInstance } from "fastify"
+import { taskAssignHandler, taskCreateHandler, taskDeleteHandler, taskGetOneHandler, taskListHandler, taskUpdateHandler } from "../controllers/taskController"
+import { taskAssignSchema, taskCreateSchema, taskUpdateSchema } from "../schemas/schemas"
 
 /**
- * Import custom controllers and schemas
- */
-import { taskCreateHandler, taskUpdateHandler } from "../controllers/taskController"
-import { taskCreateSchema, taskUpdateSchema } from "../schemas/schemas"
-
-/**
- * Registers task-related routes on the provided Fastify server instance.
- *
- * @param {FastifyInstance} server - The Fastify server instance to register routes on.
+ * Registers routes related to task management.
+ * @param server The Fastify server instance to register routes on.
  */
 async function taskRoutes(server: FastifyInstance) {
-  /**
-   * POST /api/tasks/
-   * Endpoint to create a new task.
-   *
-   * Request body should conform to taskCreateSchema.
-   */
+  // Route for creating a new task
   server.post(
     "/",
     {
-      preHandler: [server.authenticate],  // Middleware for authentication
-      schema: taskCreateSchema  // Validation schema for request body
+      preHandler: [server.authenticate], // Ensure authentication before handling the request
+      schema: taskCreateSchema // Validate request payload against task creation schema
     },
-    taskCreateHandler  // Controller function handling the request
+    taskCreateHandler // Handler function for creating a new task
   )
 
-  /**
-   * PUT /api/tasks/
-   * Endpoint to update an existing task.
-   *
-   * Request body should conform to taskUpdateSchema.
-   */
-  server.put(
+  // Route to get a list of tasks for a user
+  server.get(
     "/",
     {
-      preHandler: [server.authenticate],  // Middleware for authentication
-      schema: taskUpdateSchema  // Validation schema for request body
+      preHandler: [server.authenticate], // Ensure authentication before handling the request
     },
-    taskUpdateHandler  // Controller function handling the request
+    taskListHandler // Handler function for retrieving a list of tasks
   )
+
+  // Route to get a task
+  server.get(
+    "/:id",
+    {
+      preHandler: [server.authenticate], // Ensure authentication before handling the request
+    },
+    taskGetOneHandler // Handler function for retrieving task details
+  )
+
+  // Route for updating an existing task
+  server.put(
+    "/:id",
+    {
+      preHandler: [server.authenticate], // Ensure authentication before handling the request
+      schema: taskUpdateSchema // Validate request payload against task update schema
+    },
+    taskUpdateHandler // Handler function for updating an existing task
+  )
+
+  // Route for updating an existing task
+  server.delete(
+    "/:id",
+    {
+      preHandler: [server.authenticate], // Ensure authentication before handling the request
+    },
+    taskDeleteHandler // Handler function for updating an existing task
+  )
+
+    // Route for assigning a task to another user
+    server.put(
+      "/assign/:id",
+      {
+        preHandler: [server.authenticate], // Ensure authentication before handling the request
+        schema: taskAssignSchema           // Validate payload against user assign schema
+      },
+      taskAssignHandler // Handler function for updating an existing task
+    )
 }
 
 export default taskRoutes

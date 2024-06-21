@@ -1,7 +1,4 @@
-// Import dependencies
 import { FastifyReply, FastifyRequest } from "fastify"
-
-// Import custom
 import { checkHealth } from "../services/healthCheckService"
 
 /**
