@@ -1,13 +1,9 @@
-// Import dependencies
 import dotenv from "dotenv"
-
-// Import custom modules and types
 import buildServer from "./server"
 import { EnvVariables } from "./types/default"
 import initDatabase from "./database/sequelize"
 import { syncModels } from "./models/models"
 import { authenticate } from "./middleware/auth"
-import configureSwagger from "./middleware/swagger"
 
 // Load environment variables from .env file
 dotenv.config()
@@ -43,8 +39,6 @@ async function main() {
     await db.authenticate()
     await syncModels(db)
     console.log("Database connection established")
-
-    configureSwagger(fastify, env)
 
     // Start Fastify server
     await fastify.listen({ port: Number(env.API_PORT), host: env.API_HOST })

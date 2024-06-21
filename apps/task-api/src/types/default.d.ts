@@ -1,4 +1,3 @@
-// Import dependencies
 import { JWT } from "@fastify/jwt"
 
 // Type definition for environment variables

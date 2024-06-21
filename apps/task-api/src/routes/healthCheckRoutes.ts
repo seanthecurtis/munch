@@ -1,11 +1,4 @@
-/**
- * Import dependencies
- */
 import { FastifyInstance } from "fastify"
-
-/**
- * Import custom controllers
- */
 import { healthCheckHandler } from "../controllers/healthCheckController"
 
 /**
@@ -22,6 +15,6 @@ async function healthcheckRoutes(server: FastifyInstance) {
 }
 
 /**
- * Exports the healthcheck routes configuration function.
+ * Exports the function that configures healthcheck routes.
  */
 export default healthcheckRoutes

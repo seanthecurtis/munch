@@ -1,4 +1,3 @@
-// Import dependencies
 import { FastifyReply, FastifyRequest } from "fastify"
 import { FastifyJWT } from "@fastify/jwt"
 

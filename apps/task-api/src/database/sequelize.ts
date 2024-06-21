@@ -1,7 +1,4 @@
-// Import dependencies
 import { Sequelize } from "sequelize"
-
-// Import custom
 import { EnvVariables } from "../types/default"
 
 /**

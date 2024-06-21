@@ -1,8 +1,5 @@
-// Import dependencies
 import { JWT } from "@fastify/jwt"
 import { randomBytes, pbkdf2Sync } from "crypto"
-
-// Import custom
 import User, { UserInput, UserOutput } from "../models/userModel"
 
 /**

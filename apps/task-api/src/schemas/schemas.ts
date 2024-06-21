@@ -1,6 +1,4 @@
-/**
- * Schema for user registration.
- */
+// Schema for user registration
 export const userRegisterSchema = {
   $id: "registerSchema",
   body: {
@@ -26,9 +24,7 @@ export const userRegisterSchema = {
   }
 }
 
-/**
- * Schema for user login.
- */
+// Schema for user login
 export const userLoginSchema = {
   $id: "loginSchema",
   body: {
@@ -49,9 +45,7 @@ export const userLoginSchema = {
   }
 }
 
-/**
- * Schema for creating a task.
- */
+// Schema for creating a task.
 export const taskCreateSchema = {
   $id: "taskCreateSchema",
   body: {
@@ -108,11 +102,10 @@ export const taskCreateSchema = {
   }
 }
 
-/**
- * Schema for updating a task.
- */
+// Schema for updating a task.
 export const taskUpdateSchema = {
   $id: "taskUpdateSchema",
+  additionalProperties: false,
   body: {
     type: "object",
     properties: {
@@ -139,10 +132,33 @@ export const taskUpdateSchema = {
       },
       priority: {
         type: "string",
-        enum: ["Low", "Medium", "High"],
+        enum: ["low", "medium", "high"],
         errorMessage: {
-          enum: "Priority options: low, medium, high."
+          enum: "Priority options: Low, Medium, High."
         }
+      },
+      status: {
+        type: "string",
+        enum: ["open", "in progress", "completed"],
+        errorMessage: {
+          enum: "Status options: 'open', 'in progress', 'completed'."
+        }
+      }
+    }
+  }
+}
+
+
+
+// Schema for assigning a user to a task.
+export const taskAssignSchema = {
+  $id: "taskAssignSchema",
+  additionalProperties: false,
+  body: {
+    type: "object",
+    properties: {
+      userId: {
+        type: "number"
       },
     }
   }

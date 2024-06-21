@@ -1,7 +1,4 @@
-// Import dependencies
 import { FastifyReply, FastifyRequest, GetParams } from "fastify"
-
-// Import custom
 import { UserService } from "../services/userService"
 import { UserInput } from "../models/userModel"
 
@@ -23,7 +20,7 @@ export async function userRegisterHandler(request: FastifyRequest, reply: Fastif
     }
   } catch (err) {
     console.error(err)
-    return reply.status(400).send({ message: "Failed to register user" })
+    return reply.status(500).send({ message: "Failed to register user" })
   }
 }
 
@@ -42,7 +39,7 @@ export async function userListHandler(_: FastifyRequest, reply: FastifyReply): P
     return reply.status(200).send({ users })
   } catch (err) {
     console.error(err)
-    return reply.status(400).send({ message: "Failed to fetch user list" })
+    return reply.status(500).send({ message: "Failed to fetch user list" })
   }
 }
 
@@ -73,7 +70,7 @@ export async function userLoginHandler(request: FastifyRequest, reply: FastifyRe
     return reply.status(400).send({ message: "Failed to login user" })
   } catch (err) {
     console.error(err)
-    return reply.status(400).send({ message: "Failed to login user" })
+    return reply.status(500).send({ message: "Failed to login user" })
   }
 }
 
@@ -96,6 +93,6 @@ export async function userGetOneHandler(request: FastifyRequest, reply: FastifyR
     return reply.status(404).send({ message: "User not found" })
   } catch (err) {
     console.error(err)
-    return reply.status(400).send({ message: "Failed to fetch user" })
+    return reply.status(500).send({ message: "Failed to fetch user" })
   }
 }

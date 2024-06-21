@@ -1,9 +1,4 @@
-/**
- * Import dependencies
- */
 import { Sequelize } from "sequelize"
-
-// Import custom models
 import { initUserModel } from "./userModel"
 import { initTaskModel } from "./taskModel"
 

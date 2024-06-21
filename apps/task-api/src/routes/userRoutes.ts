@@ -1,74 +1,46 @@
-/**
- * Import dependencies
- */
 import { FastifyInstance } from "fastify"
-
-/**
- * Import custom controllers and schemas
- */
 import { userGetOneHandler, userListHandler, userLoginHandler, userRegisterHandler } from "../controllers/userController"
 import { userLoginSchema, userRegisterSchema } from "../schemas/schemas"
 
 /**
  * Registers user-related routes on the provided Fastify server instance.
- *
- * @param {FastifyInstance} server - The Fastify server instance to register routes on.
+ * @param server The Fastify server instance to register routes on.
  */
 async function userRoutes(server: FastifyInstance) {
-  /**
-   * POST /api/users/register
-   * Endpoint to register a new user.
-   *
-   * Request body should conform to userRegisterSchema.
-   */
+  // Route for user registration
   server.post(
     "/register",
     {
-      schema: userRegisterSchema  // Validation schema for request body
+      schema: userRegisterSchema // Validate request payload against user registration schema
     },
-    userRegisterHandler  // Controller function handling the request
+    userRegisterHandler // Handler function for user registration
   )
 
-  /**
-   * POST /api/users/login
-   * Endpoint to login an existing user.
-   *
-   * Request body should conform to userLoginSchema.
-   */
+  // Route for user login
   server.post(
     "/login",
     {
-      schema: userLoginSchema  // Validation schema for request body
+      schema: userLoginSchema // Validate request payload against user login schema
     },
-    userLoginHandler  // Controller function handling the request
+    userLoginHandler // Handler function for user login
   )
 
-  /**
-   * GET /api/users/:id
-   * Endpoint to fetch a user by ID.
-   *
-   * Requires authentication using server.authenticate middleware.
-   */
+  // Route to get a specific user by ID
   server.get(
     "/:id",
     {
-      preHandler: [server.authenticate]  // Middleware for authentication
+      preHandler: [server.authenticate] // Ensure authentication before handling the request
     },
-    userGetOneHandler  // Controller function handling the request
+    userGetOneHandler // Handler function to get a specific user by ID
   )
 
-  /**
-   * GET /api/users
-   * Endpoint to fetch all users.
-   *
-   * Requires authentication using server.authenticate middleware.
-   */
+  // Route to get the list of all users
   server.get(
     "/",
     {
-      preHandler: [server.authenticate]  // Middleware for authentication
+      preHandler: [server.authenticate] // Ensure authentication before handling the request
     },
-    userListHandler  // Controller function handling the request
+    userListHandler // Handler function to get the list of all users
   )
 }
 
