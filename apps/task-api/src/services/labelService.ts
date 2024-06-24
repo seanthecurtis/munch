@@ -1,10 +1,11 @@
 import { LabelModel } from "../models/labels"
 
+// Class to manage all label related database interaction
 export class LabelService {
+  // Insert labels, uniqueness on label column
   labelUpsertMany = async (labelArray: LabelModel[]): Promise<LabelModel[]> => {
     try {
       const validLabels = labelArray.filter(item => item.label !== null).map(item => ({ ...item }))
-      console.log(validLabels)
       if(validLabels.length == 0){
         return []
       }
@@ -16,6 +17,8 @@ export class LabelService {
     }
   }
 
+  // Fetch a list of labels with a list of label names as input
+  // See taskLabelAddHandler in TaskHandler to understand why this method exists
   labelIdByLabels = async (labelArray: string[]): Promise<LabelModel[]> => {
     try{
       return await LabelModel.findAll({where: {label: labelArray}, attributes: ["id"]})

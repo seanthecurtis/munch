@@ -6,7 +6,7 @@ export type User = {
   updatedAt?: string
 }
 
-export type UserFilters = {
+export type UserQueryParams = {
   email?: string
 }
 
@@ -20,19 +20,6 @@ export type Task = {
   status?: string,
   createdAt?: string
   updatedAt?: string
-}
-
-export type TaskUpdate = {
-  userId: string,
-  title: string,
-  description?: string,
-  priority?: string,
-  dueDate: string,
-  status?: string
-}
-
-export type TaskAssignUser = {
-  userId: string
 }
 
 export type TaskStatusUpdate = {
@@ -60,5 +47,11 @@ export type LabelFilters = {
 export type TaskQueryParams = {
   status?: string,
   priorityOrder?: string,
+  dueDateOrder?: string
+}
+
+export type TaskListFilters = {
+  status?: string
+  priorityOrder?: string
   dueDateOrder?: string
 }

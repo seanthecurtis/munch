@@ -2,7 +2,9 @@ import { LabelModel } from "../models/labels"
 import { TaskModel } from "../models/task"
 import { Task, TaskQueryParams } from "../types/default"
 
+// Class to manage all task related database interaction
 export class TaskService {
+  // Insert a new task
   taskCreateService = async (taskData: Task): Promise<Task | null> => {
     try {
       return await TaskModel.create(taskData as TaskModel)
@@ -11,14 +13,15 @@ export class TaskService {
     }
   }
 
+  // List all tasks
+  // Filters: status
+  // Sorting: priority, dueDate
   taskListService = async(userId: string, filters: TaskQueryParams):Promise<Task[]> => {
     try {
       const { status, priorityOrder, dueDateOrder } = filters
       // Add default pagination for now - no spec
       const page = 1
       const limit = 50
-
-      console.log(filters)
   
       // Build where clause
       const whereClause: { userId: string; status?: string } = { userId }
@@ -35,7 +38,7 @@ export class TaskService {
         order[1] = ["dueDate", dueDateOrder.toUpperCase()]
       }
   
-      // Perform findAll query with where, order, and pagination
+      // Query database with all settings applied
       const tasks = await TaskModel.findAll({
         where: whereClause,
         order,
@@ -45,11 +48,12 @@ export class TaskService {
   
       return tasks
     } catch (err) {
-      console.error("Error fetching tasks:", err)
       return []
     }
   }
 
+  // Fetch a single task
+  // Include a list of labels assigned to the task
   taskGetOneService = async(userId: string, id: string):Promise<Task | null> => {
     try{
       return await TaskModel.findOne({
@@ -66,15 +70,17 @@ export class TaskService {
     }
   }
 
+  // Remove a task
   taskDeleteOneService = async(userId: string, id: string):Promise<number> => {
     try{
-      // Enhancement: create db transaction to rollback if more than one task deleted
+      // Enhancement: create db transaction to manage rollbacks: scenario - more than one deleted
       return await TaskModel.destroy({where: {userId, id}})
     }catch(err){
       return 0
     }
   }
 
+  // Update the details of a task
   taskUpdateService = async(taskData: Task, userId: string, id: string):Promise<number> => {
     try{
       const [affectedRows] = await TaskModel.update(taskData,{where: {id, userId}})
