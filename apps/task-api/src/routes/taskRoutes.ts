@@ -1,68 +1,65 @@
-import { FastifyInstance } from "fastify"
-import { taskAssignHandler, taskCreateHandler, taskDeleteHandler, taskGetOneHandler, taskListHandler, taskUpdateHandler } from "../controllers/taskController"
-import { taskAssignSchema, taskCreateSchema, taskUpdateSchema } from "../schemas/schemas"
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { TaskHandler } from "../handlers/taskHandlers"
+import { taskAssignSchema, taskCreateSchema, taskStatusSchema, taskTagSchema, taskUpdateSchema } from "../schemas/schema"
+import { AuthMiddleware } from "../helpers/auth"
 
-/**
- * Registers routes related to task management.
- * @param server The Fastify server instance to register routes on.
- */
-async function taskRoutes(server: FastifyInstance) {
-  // Route for creating a new task
-  server.post(
-    "/",
-    {
-      preHandler: [server.authenticate], // Ensure authentication before handling the request
-      schema: taskCreateSchema // Validate request payload against task creation schema
-    },
-    taskCreateHandler // Handler function for creating a new task
-  )
+export class TaskRouter{
+  private taskHandler: TaskHandler
+  private authMiddleware: AuthMiddleware
+  constructor(taskHandler: TaskHandler, authMiddleware: AuthMiddleware){
+    this.taskHandler = taskHandler
+    this.authMiddleware = authMiddleware
+  }
+  taskRoutes = async (fastify: FastifyInstance) => {
+    fastify.post("/", {
+      preHandler: this.authMiddleware.authenticate, 
+      schema: taskCreateSchema
+    }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskCreateHandler(request, reply)
+    })
 
-  // Route to get a list of tasks for a user
-  server.get(
-    "/",
-    {
-      preHandler: [server.authenticate], // Ensure authentication before handling the request
-    },
-    taskListHandler // Handler function for retrieving a list of tasks
-  )
+    fastify.get("/", {
+      preHandler: this.authMiddleware.authenticate}, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskListHandler(request, reply)
+    })
 
-  // Route to get a task
-  server.get(
-    "/:id",
-    {
-      preHandler: [server.authenticate], // Ensure authentication before handling the request
-    },
-    taskGetOneHandler // Handler function for retrieving task details
-  )
+    fastify.get("/:id", {
+      preHandler: this.authMiddleware.authenticate}, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskGetOneHandler(request, reply)
+    })
 
-  // Route for updating an existing task
-  server.put(
-    "/:id",
-    {
-      preHandler: [server.authenticate], // Ensure authentication before handling the request
-      schema: taskUpdateSchema // Validate request payload against task update schema
-    },
-    taskUpdateHandler // Handler function for updating an existing task
-  )
+    fastify.delete("/:id", {
+      preHandler: this.authMiddleware.authenticate}, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskDeleteHandler(request, reply)
+    })
 
-  // Route for updating an existing task
-  server.delete(
-    "/:id",
-    {
-      preHandler: [server.authenticate], // Ensure authentication before handling the request
-    },
-    taskDeleteHandler // Handler function for updating an existing task
-  )
+    fastify.put("/assign/:id", {
+      preHandler: this.authMiddleware.authenticate,
+      schema: taskAssignSchema
+    }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskAssignUserHandler(request, reply)
+    })
 
-    // Route for assigning a task to another user
-    server.put(
-      "/assign/:id",
-      {
-        preHandler: [server.authenticate], // Ensure authentication before handling the request
-        schema: taskAssignSchema           // Validate payload against user assign schema
-      },
-      taskAssignHandler // Handler function for updating an existing task
-    )
+    fastify.put("/status/:id", {
+      preHandler: this.authMiddleware.authenticate,
+      schema: taskStatusSchema
+    }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskStatusHandler(request, reply)
+    })
+
+    fastify.put("/:id", {
+      preHandler: this.authMiddleware.authenticate,
+      schema: taskUpdateSchema
+    }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskUpdateHandler(request, reply)
+    })
+
+    fastify.put("/tag/:id", {
+      preHandler: this.authMiddleware.authenticate,
+      schema: taskTagSchema
+    }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      await this.taskHandler.taskLabelAddHandler(request, reply)
+    })
+    
+  }
 }
-
-export default taskRoutes

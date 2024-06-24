@@ -2,6 +2,7 @@
 export const userRegisterSchema = {
   $id: "registerSchema",
   body: {
+    additionalProperties: false,
     type: "object",
     required: ["email", "password"],
     properties: {
@@ -9,7 +10,7 @@ export const userRegisterSchema = {
       password: {
         type: "string",
         minLength: 8,
-        maxLength: 128,
+        maxLength: 255,
         errorMessage: {
           minLength: "Password must be at least 8 characters long"
         }
@@ -28,6 +29,7 @@ export const userRegisterSchema = {
 export const userLoginSchema = {
   $id: "loginSchema",
   body: {
+    additionalProperties: false,
     type: "object",
     required: ["email", "password"],
     properties: {
@@ -49,6 +51,7 @@ export const userLoginSchema = {
 export const taskCreateSchema = {
   $id: "taskCreateSchema",
   body: {
+    additionalProperties: false,
     type: "object",
     required: ["title", "dueDate"],
     properties: {
@@ -79,7 +82,6 @@ export const taskCreateSchema = {
       priority: {
         type: "string",
         enum: ["low", "medium", "high"],
-        default: "low",
         errorMessage: {
           enum: "Priority options: low, medium, high."
         }
@@ -87,7 +89,6 @@ export const taskCreateSchema = {
       status: {
         type: "string",
         enum: ["open", "in progress", "completed"],
-        default: "open",
         errorMessage: {
           enum: "Status options: 'open', 'in progress', 'completed'."
         }
@@ -96,7 +97,7 @@ export const taskCreateSchema = {
     errorMessage: {
       required: {
         title: "Title is required",
-        due_date: "A due date is required",
+        dueDate: "A due date is required",
       }
     }
   }
@@ -105,8 +106,8 @@ export const taskCreateSchema = {
 // Schema for updating a task.
 export const taskUpdateSchema = {
   $id: "taskUpdateSchema",
-  additionalProperties: false,
   body: {
+    additionalProperties: false,
     type: "object",
     properties: {
       title: {
@@ -148,18 +149,59 @@ export const taskUpdateSchema = {
   }
 }
 
-
-
 // Schema for assigning a user to a task.
 export const taskAssignSchema = {
   $id: "taskAssignSchema",
-  additionalProperties: false,
   body: {
+    required: ["userId"],
     type: "object",
+    additionalProperties: false,
     properties: {
       userId: {
-        type: "number"
+        type: "string"
       },
     }
   }
 }
+
+// Schema for assigning labels to a task.
+export const taskTagSchema = {
+  $id: "taskTagSchema",
+  body: {
+    additionalProperties: false,
+    type: "array",
+    items: {
+      type: "string",
+      minLength: 1,
+      maxLength: 255, // limit each label name to 255 characters
+      minItems: 1,
+      maxItems: 100 // limit the api to batches of 100
+    }
+  }
+}
+
+// Schema for task status updates
+export const taskStatusSchema = {
+  $id: "taskStatusSchema",
+  body: {
+    required: ["status"],
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      status: taskCreateSchema.body.properties.status,
+    }
+  }
+}
+
+
+const Schemas = [
+  userRegisterSchema,
+  userLoginSchema,
+  taskCreateSchema,
+  taskUpdateSchema,
+  taskAssignSchema, 
+  taskTagSchema,
+  taskStatusSchema
+]
+
+export default Schemas
