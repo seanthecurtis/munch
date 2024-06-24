@@ -1,45 +1,64 @@
-import { JWT } from "@fastify/jwt"
-
-// Type definition for environment variables
-export type EnvVariables = {
-  API_PORT: string;                 // Port number for the API server
-  API_HOST: string;                 // Host address for the API server
-  ENABLE_LOGGING: boolean;          // Flag to enable/disable logging
-  MYSQL_DATABASE: string;           // Name of the MySQL database
-  MYSQL_ROOT_PASSWORD: string;      // Password for MySQL root user
-  MYSQL_PORT: string;               // Port number for MySQL connection
-  MYSQL_ROOT_USER: string;          // Username for MySQL root user
-  JWT_TOKEN: string;                // JWT secret token for authentication
-  COOKIE_SECRET: string;            // Secret for encrypting cookies
-  API_KEY: string;                  // API key for authenticating API requests
-  MYSQL_HOST: string;               // Host address for MySQL database
-  API_URL: string;                  // API url
-};
-
-// Extend the Fastify interfaces and modules with TypeScript declarations
-declare module "fastify" {
-  // Extend FastifyRequest interface to include 'jwt' property
-  interface FastifyRequest {
-    jwt: JWT;                       // JWT instance for handling JWT operations
-  }
-
-  // Extend FastifyInstance interface with 'authenticate' method
-  export interface FastifyInstance {
-    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
-  }
-
-  // Define additional properties for GetParams interface
-  interface GetParams {
-    id: string;                     // ID parameter expected in GET requests
-  }
+export type User = {
+  id?: string,
+  email: string,
+  password?: string,
+  createdAt?: string
+  updatedAt?: string
 }
 
-// Extend FastifyJWT interface from '@fastify/jwt' module with 'user' property
-declare module "@fastify/jwt" {
-  interface FastifyJWT {
-    user: UserPayload;              // UserPayload type for JWT user information
-  }
+export type UserFilters = {
+  email?: string
 }
 
-// Type definition for authentication function used in server setup
-export type AuthFunction = (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+export type Task = {
+  id?: string,
+  userId: string,
+  title: string,
+  description?: string,
+  priority?: string,
+  dueDate: string,
+  status?: string,
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type TaskUpdate = {
+  userId: string,
+  title: string,
+  description?: string,
+  priority?: string,
+  dueDate: string,
+  status?: string
+}
+
+export type TaskAssignUser = {
+  userId: string
+}
+
+export type TaskStatusUpdate = {
+  status: string
+}
+
+export type JwtTokenData = {
+  userId: string
+}
+
+export type ParamGeneric = {
+  id: string
+}
+
+export type Label = {
+  id?: string
+  label: string
+}
+
+export type LabelFilters = {
+  id?: string,
+  label?: string
+}
+
+export type TaskQueryParams = {
+  status?: string,
+  priorityOrder?: string,
+  dueDateOrder?: string
+}
