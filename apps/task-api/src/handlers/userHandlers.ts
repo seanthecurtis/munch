@@ -17,8 +17,7 @@ export class UserHandler{
   // List all users: to select a user to assign to a task
   userListHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const queryParams = request.query as UserQueryParams
-      const filters = {email: queryParams.email} as UserQueryParams
+      const filters = request.query as UserQueryParams
       // Limit filters to email exact match for now
       // Add pagination if required - scalability issue since user table is a growing table
       const users = await this.userService.userList(filters)
