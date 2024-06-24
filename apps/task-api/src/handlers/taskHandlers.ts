@@ -37,7 +37,7 @@ export class TaskHandler{
         status: queryParams.status as string | undefined,
         priorityOrder: queryParams.priorityOrder as string | undefined,
         dueDateOrder: queryParams.dueDateOrder as string | undefined,
-      };
+      }
       const { userId } = request.user as JwtTokenData
       const tasks = await this.taskService.taskListService(userId, filters)
       reply.status(200).send({tasks})

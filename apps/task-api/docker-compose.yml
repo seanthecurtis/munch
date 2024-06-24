@@ -6,7 +6,7 @@ services:
       MYSQL_ROOT_PASSWORD: task
       MYSQL_DATABASE: taskdb
     ports:
-      - "3306:3306"  # Map container port 3306 to host port 3306
+      - "3306:3306"
 
   testdb:
     image: mysql:latest
@@ -15,7 +15,7 @@ services:
       MYSQL_ROOT_PASSWORD: test
       MYSQL_DATABASE: taskdb
     ports:
-      - "3307:3306"  # Map container port 3306 to host port 3307 for testdb
+      - "3307:3306"
   
   swagger:
     image: swaggerapi/swagger-ui
@@ -28,14 +28,14 @@ services:
 
   api:
     build:
-      context: .  # Assuming your Dockerfile is in the root directory
+      context: . 
       dockerfile: Dockerfile
     container_name: api
     env_file:
       - .env
     environment:
-      - MYSQL_HOST=taskdb
+      - MYSQL_HOST=taskdb  # Points to the dokcer service taskdb
     ports:
-      - "3001:3001"  # Map container port 3000 to host port 3000
+      - "3001:3001"
     depends_on:
       - taskdb
