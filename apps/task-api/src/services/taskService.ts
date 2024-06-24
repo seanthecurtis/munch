@@ -29,10 +29,10 @@ export class TaskService {
       // Build order array for sorting
       const order: [string, string][] = [["priority", "ASC"], ["dueDate", "ASC"]]
       if (priorityOrder == "desc") {
-        order[0] = ["priority", priorityOrder.toUpperCase()];
+        order[0] = ["priority", priorityOrder.toUpperCase()]
       }
       if (dueDateOrder == "desc") {
-        order[1] = ["dueDate", dueDateOrder.toUpperCase()];
+        order[1] = ["dueDate", dueDateOrder.toUpperCase()]
       }
   
       // Perform findAll query with where, order, and pagination
@@ -41,12 +41,12 @@ export class TaskService {
         order,
         limit,
         offset: (page - 1) * limit,
-      });
+      })
   
-      return tasks;
+      return tasks
     } catch (err) {
-      console.error("Error fetching tasks:", err);
-      return [];
+      console.error("Error fetching tasks:", err)
+      return []
     }
   }
 
