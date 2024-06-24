@@ -43,6 +43,7 @@ const start = async () => {
         "5cfff48b-55ec-49fb-a324-af38a21a6de6",
       ])
       const apiKey = request.headers["x-api-key"] as string
+      console.log(apiKey)
       if (!apiKey || !allowedKeys.has(apiKey)) {
         reply.status(401).send({ message: "Unauthorized" })
         throw new Error("Unauthorized")

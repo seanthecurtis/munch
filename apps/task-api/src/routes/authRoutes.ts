@@ -15,11 +15,13 @@ export class AuthRouter{
     // Registration endpoint
     // POST /api/register
     fastify.post("/register", {schema: userRegisterSchema }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      console.log(request.body)
       await this.authHandler.registerHandler(request, reply)
     })
     // Login endpoint
     // POST /api/login
     fastify.post("/login", {schema: userLoginSchema }, async(request: FastifyRequest, reply: FastifyReply)=>{
+      console.log(request.body)
       await this.authHandler.loginHandler(request, reply)
     })
   }

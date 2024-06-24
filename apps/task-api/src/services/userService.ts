@@ -15,9 +15,18 @@ export class UserService {
   // Enhancement: add pagination params and defaults
   userList = async (filters: UserQueryParams): Promise<User[] | null> => {
     try {
-      const where = filters
+      // Remove undefined keys for querying
+      const params: Partial<UserQueryParams> = {};
+      Object.keys(filters).forEach((i) => {
+        const key = i as keyof UserQueryParams
+        if (filters[key] !== undefined) {
+          params[key] = filters[key];
+        }
+      });
+      const where = params
       return await UserModel.findAll({where, attributes: ["id", "email", "createdAt"]})
     } catch (err) {
+      console.log(err)
       return null
     }
   }

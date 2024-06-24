@@ -21,8 +21,8 @@ export const userRegisterSchema = {
     },
     errorMessage: {
       required: {
-        email: "Email is required",
-        password: "Password is required"
+        email: "email is required",
+        password: "password is required"
       }
     }
   }
@@ -43,8 +43,8 @@ export const userLoginSchema = {
     },
     errorMessage: {
       required: {
-        email: "Email is required",
-        password: "Password is required"
+        email: "email is required",
+        password: "password is required"
       }
     }
   }
@@ -63,8 +63,8 @@ export const taskCreateSchema = {
         maxLength: 100,
         minLength: 1,
         errorMessage: {
-          minLength: "Title may not be empty.",
-          maxLength: "Title exceeds 100 characters."
+          minLength: "title may not be empty.",
+          maxLength: "title exceeds 100 characters."
         }
       },
       userId: {
@@ -75,8 +75,8 @@ export const taskCreateSchema = {
         minLength: 1,
         maxLength: 255,
         errorMessage: {
-          minLength: "Description may not be empty.",
-          maxLength: "Description exceeds 255 characters."
+          minLength: "description may not be empty.",
+          maxLength: "description exceeds 255 characters."
         }
       },
       dueDate: {
@@ -86,21 +86,21 @@ export const taskCreateSchema = {
         type: "string",
         enum: ["low", "medium", "high"],
         errorMessage: {
-          enum: "Priority options: low, medium, high."
+          enum: "priority options: low, medium, high."
         }
       },
       status: {
         type: "string",
         enum: ["open", "in progress", "completed"],
         errorMessage: {
-          enum: "Status options: 'open', 'in progress', 'completed'."
+          enum: "status options: 'open', 'in progress', 'completed'."
         }
       },
     },
     errorMessage: {
       required: {
-        title: "Title is required",
-        dueDate: "A due date is required",
+        title: "title is required",
+        dueDate: "dueDate is required",
       }
     }
   }
@@ -118,8 +118,8 @@ export const taskUpdateSchema = {
         maxLength: 100,
         minLength: 1,
         errorMessage: {
-          minLength: "Title may not be empty.",
-          maxLength: "Title exceeds 100 characters."
+          minLength: "title may not be empty.",
+          maxLength: "title exceeds 100 characters."
         }
       },
       description: {
@@ -127,8 +127,8 @@ export const taskUpdateSchema = {
         minLength: 1,
         maxLength: 255,
         errorMessage: {
-          minLength: "Description may not be empty.",
-          maxLength: "Description exceeds 255 characters."
+          minLength: "description may not be empty.",
+          maxLength: "description exceeds 255 characters."
         }
       },
       dueDate: {
@@ -138,14 +138,14 @@ export const taskUpdateSchema = {
         type: "string",
         enum: ["low", "medium", "high"],
         errorMessage: {
-          enum: "Priority options: Low, Medium, High."
+          enum: "priority options: Low, Medium, High."
         }
       },
       status: {
         type: "string",
         enum: ["open", "in progress", "completed"],
         errorMessage: {
-          enum: "Status options: 'open', 'in progress', 'completed'."
+          enum: "status options: 'open', 'in progress', 'completed'."
         }
       }
     }
@@ -192,6 +192,11 @@ export const taskStatusSchema = {
     additionalProperties: false,
     properties: {
       status: taskCreateSchema.body.properties.status,
+    }
+  },
+  errorMessage: {
+    required: {
+      status: "Status is required",
     }
   }
 }
