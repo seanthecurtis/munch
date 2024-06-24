@@ -1,6 +1,7 @@
 import { FastifyReply } from "fastify"
 import { HttpError } from "../types/interfaces"
 
+// Error handling/logging
 export class ErrorHandler{
   httpErrorHandler = async (reply: FastifyReply, err: HttpError)=>{
     const statusCode = err.statusCode || 500

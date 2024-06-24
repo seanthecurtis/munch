@@ -1,3 +1,6 @@
+// All schemas for ajv to manage payload validation
+// Enhancement to move schemas to routes groups - limited amount as of now
+
 // Schema for user registration
 export const userRegisterSchema = {
   $id: "registerSchema",
@@ -193,7 +196,7 @@ export const taskStatusSchema = {
   }
 }
 
-
+// Export all schemas
 const Schemas = [
   userRegisterSchema,
   userLoginSchema,

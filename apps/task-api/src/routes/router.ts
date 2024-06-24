@@ -12,12 +12,14 @@ import { AuthMiddleware } from "../helpers/auth"
 import { ErrorHandler } from "../helpers/errorHandler"
 import Schemas from "../schemas/schema"
 
+// Class to set up all the fastify routes
 export class Router{
   private server: FastifyInstance
   constructor(server: FastifyInstance){
     this.server = server
   }
 
+  // Function to initialize the routes
   routerSetup = async() => {
     // Add schemas to fastify instance
     Schemas.forEach(schema=>this.server.addSchema(schema))
@@ -30,6 +32,7 @@ export class Router{
     const authHandler = new AuthHandler(authService, authMiddleware, errorHandler)
     const authRouter = new AuthRouter(authHandler)
 
+    // Register auth routes on the fastify instance
     this.server.register(
       async (instance) => {
         await authRouter.authRoutes(instance)
@@ -42,6 +45,7 @@ export class Router{
     const userHandler = new UserHandler(userService, errorHandler)
     const userRouter = new UserRouter(userHandler, authMiddleware)
 
+    // Register user routes on the fastify instance
     this.server.register(
       async (instance) => {
         await userRouter.userRoutes(instance)
@@ -54,6 +58,7 @@ export class Router{
     const taskHandler = new TaskHandler(taskService, errorHandler)
     const taskRouter = new TaskRouter(taskHandler, authMiddleware)
 
+    // Register task routes on the fastify instance
     this.server.register(
       async (instance) => {
         await taskRouter.taskRoutes(instance)

@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify"
-import { JwtTokenData, ParamGeneric, Task, TaskAssignUser, TaskQueryParams, TaskStatusUpdate } from "../types/default"
+import { JwtTokenData, ParamGeneric, Task, TaskQueryParams, TaskStatusUpdate, TaskListFilters } from "../types/default"
 import { ErrorHandler } from "../helpers/errorHandler"
-import { HttpError, TaskListFilters } from "../types/interfaces"
+import { HttpError } from "../types/interfaces"
 import { TaskService } from "../services/taskService"
 import { UserService } from "../services/userService"
 import { LabelService } from "../services/labelService"
@@ -9,36 +9,47 @@ import { LabelModel } from "../models/labels"
 import { TaskLabelService } from "../services/taskLabelService"
 import { TaskLabelModel } from "../models/taskLabels"
 
+// Class to handle all task api business logic
 export class TaskHandler{
   private taskService: TaskService
   private errorHandler: ErrorHandler
 
+  // Construct handler with dependencies
   constructor(taskService: TaskService, errorHandler: ErrorHandler) {
     this.taskService = taskService
     this.errorHandler = errorHandler
   }
+  // Handles task create logic
   taskCreateHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { userId } = request.user as JwtTokenData
+      
+      // Assign the logged in user by default
       const taskData = Object.assign(request.body as Task, { userId }) as Task
+      
       const result = await this.taskService.taskCreateService(taskData)
+      
       if(!result) throw {statusCode: 400, message: "Failed to create task"} as HttpError
+      
       reply.status(201).send({message: "Task created"})
     } catch (err) {
       await this.errorHandler.httpErrorHandler(reply, err as HttpError)
     }
   }
 
+  // Return a list of tasks assigned to the logged in user
   taskListHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       // Get query params
       const queryParams = request.query as TaskQueryParams
-      const filters: TaskListFilters = {
-        status: queryParams.status as string | undefined,
-        priorityOrder: queryParams.priorityOrder as string | undefined,
-        dueDateOrder: queryParams.dueDateOrder as string | undefined,
-      }
+      // Get the filters from query params
+      const filters = {
+        status: queryParams.status,
+        priorityOrder: queryParams.priorityOrder,
+        dueDateOrder: queryParams.dueDateOrder
+      } as TaskListFilters
       const { userId } = request.user as JwtTokenData
+      // Query the database with filters/sorting
       const tasks = await this.taskService.taskListService(userId, filters)
       reply.status(200).send({tasks})
     } catch (err) {
@@ -46,10 +57,14 @@ export class TaskHandler{
     }
   }
 
+  // Fetch a single task from the database
+  // Make sure only the logged in user can view the task
   taskGetOneHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
+
+      // Query teh database with user and task ids
       const task = await this.taskService.taskGetOneService(userId, id)
       if(!task) throw {statusCode: 404, message: "Task not found"} as HttpError
       reply.status(200).send({message: "Task found", task})
@@ -58,19 +73,21 @@ export class TaskHandler{
     }
   }
 
+  // Assign a task to another user
   taskAssignUserHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const payload = request.body as TaskAssignUser
-      console.log(payload)
+      const payload = request.body as {userId: string }
       const userToAssign = payload.userId
       
-      //  check if user exists
+      // Check if user exists
       const userService = new UserService()
       const user = await userService.userGetOneByID(userToAssign)
       if(!user) throw {statusCode: 404, message: "User not found"} as HttpError
       
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
+      // Attach logged in user to the query
+      // Assign task from logged in user to provided user id
       const task = await this.taskService.taskUpdateService({userId: userToAssign} as Task, userId, id)
       
       if(!task) throw {statusCode: 404, message: "Task not found"} as HttpError
@@ -80,8 +97,9 @@ export class TaskHandler{
     }
   }
 
+  // Handles removing a task
   taskDeleteHandler = async (request: FastifyRequest, reply: FastifyReply) => {
-    try {      
+    try {
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
       const task = await this.taskService.taskDeleteOneService(userId, id)
@@ -93,11 +111,13 @@ export class TaskHandler{
     }
   }
 
+  // Handles status update of a task
   taskStatusHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const { status } = request.body as TaskStatusUpdate
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
+      // Only assigned user can update task data
       const task = await this.taskService.taskUpdateService({status} as Task, userId, id)
       
       if(!task) throw {statusCode: 404, message: "Task not found"} as HttpError
@@ -107,13 +127,15 @@ export class TaskHandler{
     }
   }
 
+  // Handles update of a tasks details
   taskUpdateHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const taskData = request.body as Task
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
+      // Only assigned user can update task data
       const task = await this.taskService.taskUpdateService(taskData, userId, id)
-      
+      // For security do not return who the task is assigned to - this could be sensitive information?
       if(!task) throw {statusCode: 404, message: "Task not found"} as HttpError
       reply.status(200).send({message: "Task details updated"})
     } catch (err) {
@@ -121,11 +143,11 @@ export class TaskHandler{
     }
   }
 
+  // Add a list of labels to a task
   taskLabelAddHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const payload = request.body as string[]
       const labels = payload.map(label=>({label: label})) as LabelModel[]
-      console.log(labels)
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
 
@@ -135,11 +157,10 @@ export class TaskHandler{
 
       // I attempted to do a insert on conflict update to return all ids in a single query
       // mysql doesnt support this as postgres does. Solution is to insert then select 
-      // Reason to let the database deal with duplication is to avoid concurrency issues
-      // Create labels
-
+      // Reason for letting the database deal with duplication is to avoid concurrency issues
+      
       const labelService = new LabelService()
-
+      // Create labels
       await labelService.labelUpsertMany(labels)
 
       // Create list of label names
@@ -147,7 +168,7 @@ export class TaskHandler{
       // Select all labels for insert
       const labelIDs = await labelService.labelIdByLabels(labelsToFecth)
 
-      // Create an array of TaskLabelModel
+      // Assign all the labels to the task
       const taskLabels = labelIDs.map(o=>({taskId: id, labelId: o.id} as unknown as TaskLabelModel)) as TaskLabelModel[]
       const taskLabelService = new TaskLabelService()
       await taskLabelService.taskLabelUpsert(taskLabels)

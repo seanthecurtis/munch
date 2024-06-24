@@ -5,10 +5,10 @@ import { TaskModel } from "../models/task"
 import { TaskLabelModel } from "../models/taskLabels"
 import { LabelModel } from "../models/labels"
 
+// Initialize database connection
 const sequelize = new Sequelize({
   ...db,
   models: [UserModel, TaskModel, TaskLabelModel, LabelModel],
 })
-
 
 export default sequelize

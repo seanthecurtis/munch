@@ -3,6 +3,7 @@ import { Options } from "sequelize"
 
 dotenv.config()
 
+// Fetch all env variables from env file
 const {
   API_PORT,
   API_HOST,
@@ -18,6 +19,7 @@ const {
   API_KEY,
 } = process.env
 
+// Set the database config options
 export const db: Options = {
   username: MYSQL_ROOT_USER,
   password: MYSQL_ROOT_PASSWORD,
@@ -28,12 +30,14 @@ export const db: Options = {
   logging: ENABLE_LOGGING === "true",
 }
 
+// Set the server config options
 export const serverConfig = {
   port: parseInt(API_PORT || "3001", 10),
   host: API_HOST || "0.0.0.0",
   url: API_URL || "http://127.0.0.1:3001",
 }
 
+// Set all auth related options
 export const authConfig = {
   jwtToken: JWT_TOKEN,
   cookieSecret: COOKIE_SECRET,
