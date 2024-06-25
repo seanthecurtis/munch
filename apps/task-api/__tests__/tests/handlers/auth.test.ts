@@ -1,22 +1,20 @@
-import fastify, { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import fastify, { FastifyInstance, FastifyRequest } from "fastify"
 import { AuthHandler } from "../../../src/handlers/authHandlers"
 import { faker } from "@faker-js/faker"
-import { AuthService } from "../../__mocks__/authService"
-import { MockFastifyInstance } from "../../__mocks__/fastifyInstance"
 import { User } from "../../../src/types/default"
 import {describe, expect, test, beforeEach, jest, beforeAll} from "@jest/globals"
-import { ErrorHandler } from "../../__mocks__/ErrorHandler"
-// import { AuthMiddleware } from "../../../src/helpers/auth"
-import { MockAuthMiddleware } from "../../__mocks__/auth"
+import { AuthMiddlewareMock, ErrorHandlerMock, MockFastifyInstance, MockFastifyReply } from "../../__mocks__/helpers"
+import { AuthService } from "../../../src/services/authService"
 
-describe("Auth handler",() => {
-  let authHandler: AuthHandler
-  let authService: AuthService
-  let errorHandler: ErrorHandler
-  let authMiddleware: MockAuthMiddleware
-  let reply: FastifyReply
+describe("Auth handler tests",() => {
+  let errorHandlerMock: ErrorHandlerMock
   let mockFastify: MockFastifyInstance
+  let authServiceMock: AuthService
+  let authMiddlewareMock: AuthMiddlewareMock
+  let authHandler: AuthHandler
+  let reply: MockFastifyReply
   let server: FastifyInstance
+
 
   beforeAll(async()=>{
     server = fastify()
@@ -24,22 +22,22 @@ describe("Auth handler",() => {
   })
 
   beforeEach(async()=>{
-    authService = new AuthService()
-    errorHandler = new ErrorHandler()
-    authMiddleware = new MockAuthMiddleware(server, errorHandler)
-    authHandler = new AuthHandler(authService, authMiddleware, errorHandler)
     mockFastify = new MockFastifyInstance()
+    errorHandlerMock = new ErrorHandlerMock()
+    authServiceMock = new AuthService()
+    authMiddlewareMock = new AuthMiddlewareMock(server, errorHandlerMock)
     reply = mockFastify.createMockedReply()
+    authHandler = new AuthHandler(authServiceMock, authMiddlewareMock, errorHandlerMock)
   })
 
-  test("register handler success", async()=>{
+  test("should register a user", async()=>{
     const body = {
       email: faker.internet.email(),
       password: faker.internet.password()
     }
 
-    jest.spyOn(authMiddleware, "authenticate").mockResolvedValueOnce()
-    jest.spyOn(authService, "registerService").mockResolvedValueOnce({}as User)
+    jest.spyOn(authMiddlewareMock, "authenticate").mockResolvedValueOnce()
+    jest.spyOn(authServiceMock, "registerService").mockResolvedValueOnce({}as User)
 
     const request = {body} as FastifyRequest
 
@@ -49,12 +47,12 @@ describe("Auth handler",() => {
     expect(reply.status).toHaveBeenCalledWith(201)
   })
 
-  test("register handler fail", async() => {
+  test("should fail to register a user", async() => {
     const body = {
       password: faker.internet.password()
     }
 
-    jest.spyOn(authService, "registerService").mockResolvedValueOnce(null)
+    jest.spyOn(authServiceMock, "registerService").mockResolvedValueOnce(null)
 
     const request = {body} as FastifyRequest
 
@@ -64,7 +62,7 @@ describe("Auth handler",() => {
     expect(reply.send).toHaveBeenCalledWith({ message: "User registration failed" })
   })
 
-  test("login handler success", async() => {
+  test("should login", async() => {
     const body = {
       email: faker.internet.email(),
       password: faker.internet.password()
@@ -72,11 +70,11 @@ describe("Auth handler",() => {
 
     const request = {body} as FastifyRequest
 
-    jest.spyOn(authService, "loginService").mockResolvedValueOnce({id: faker.string.uuid()} as User)
+    jest.spyOn(authServiceMock, "loginService").mockResolvedValueOnce({id: faker.string.uuid()} as User)
 
     await authHandler.loginHandler(request, reply)
 
-    jest.spyOn(authMiddleware, "jwtSign").mockResolvedValueOnce(faker.string.uuid())
+    jest.spyOn(authMiddlewareMock, "jwtSign").mockResolvedValueOnce(faker.string.uuid())
 
     expect(reply.status).toHaveBeenCalledWith(200)
 
@@ -85,12 +83,12 @@ describe("Auth handler",() => {
     }))
   })
 
-  test("login handler invalid credentials", async() => {
+  test("should fail to login when no email", async() => {
     const body = {
       password: faker.internet.password()
     }
 
-    jest.spyOn(authService, "loginService").mockResolvedValueOnce(null)
+    jest.spyOn(authServiceMock, "loginService").mockResolvedValueOnce(null)
 
     const request = {body} as FastifyRequest
 
@@ -100,13 +98,14 @@ describe("Auth handler",() => {
     expect(reply.send).toHaveBeenCalledWith({ message: "Invalid login credentials" })
   })
 
-  test("login handler fail to sign tokens", async() => {
+  test("should fail to generate access tokens", async() => {
     const body = {
       email: faker.internet.email(),
       password: faker.internet.password()
     }
 
-    jest.spyOn(authMiddleware, "jwtSign").mockResolvedValueOnce(null)
+    jest.spyOn(authServiceMock, "loginService").mockResolvedValueOnce({} as User)
+    jest.spyOn(authMiddlewareMock, "jwtSign").mockResolvedValueOnce(null)
 
     const request = {body} as FastifyRequest
 

@@ -1,0 +1,448 @@
+{
+  "info": {
+    "_postman_id": "e0ea7ecc-bbbe-4255-9d4f-16490371f0fe",
+    "name": "munch-task-manager-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1093641"
+  },
+  "item": [
+    {
+      "name": "healthcheck",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:3001/healthcheck",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["healthcheck"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user-create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [""],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const randomEmail = `test${Math.floor(Math.random() * 100000)}@example.com`;",
+              "const randomPassword = Math.random().toString(36).slice(-8);",
+              "",
+              "pm.environment.set('email', randomEmail);",
+              "pm.environment.set('password', randomPassword);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/register",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user-login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/login",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user-list",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/users",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const res = pm.response.json()",
+              "console.log(res)",
+              "pm.environment.set(\"task_id\", res.id);",
+              "",
+              "console.log(pm.environment.get(\"task_id\"))"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "5cfff48b-55ec-49fb-a324-af38a21a6de6",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWFudGhlY3VydGlzQGdtYWlsLmNvbSIsImlhdCI6MTcxODcwMjQzOSwiZXhwIjoxNzE4NzA2MDM5fQ.hXp9K3wUSvXvspWdH1V98FPZs4aaeNzR-I-0gZFx5EU",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"{{$randomAlphaNumeric}}\",\n    \"dueDate\": \"{{$randomDateFuture}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-list",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUwZmY0MGZmLWE2NjItNGE0MC04ZmMwLTE1YWFmMWZmNGYzMiIsImlhdCI6MTcxOTE1OTEzOSwiZXhwIjoxNzE5MTYyNzM5fQ.TGlL7bF7C8vKWRomuazn2_xXT0bKXlU5Za3NI-bsuZs",
+            "type": "text",
+            "disabled": true
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks?status=open",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks"],
+          "query": [
+            {
+              "key": "status",
+              "value": "open"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-read",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [""],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": ["console.log(pm.environment.get(\"task_id\"));"],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks/{{task_id}}",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks", "{{task_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "5cfff48b-55ec-49fb-a324-af38a21a6de6",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWFudGhlY3VydGlzQGdtYWlsLmNvbSIsImlhdCI6MTcxODcwMjQzOSwiZXhwIjoxNzE4NzA2MDM5fQ.hXp9K3wUSvXvspWdH1V98FPZs4aaeNzR-I-0gZFx5EU",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"priority\": \"medium\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks/{{task_id}}",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks", "{{task_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-assign",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "5cfff48b-55ec-49fb-a324-af38a21a6de6",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWFudGhlY3VydGlzQGdtYWlsLmNvbSIsImlhdCI6MTcxODcwMjQzOSwiZXhwIjoxNzE4NzA2MDM5fQ.hXp9K3wUSvXvspWdH1V98FPZs4aaeNzR-I-0gZFx5EU",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"status\": \"completed\",\n    \"userId\": \"2109da06-2a4a-40fd-b934-b7a54bfcecd9\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks/assign/{{task_id}}",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks", "assign", "{{task_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-tag",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "5cfff48b-55ec-49fb-a324-af38a21a6de6",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzZWFudGhlY3VydGlzQGdtYWlsLmNvbSIsImlhdCI6MTcxODcwMjQzOSwiZXhwIjoxNzE4NzA2MDM5fQ.hXp9K3wUSvXvspWdH1V98FPZs4aaeNzR-I-0gZFx5EU",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\"new tag 1\", \"new tag 2\", \"another one\"]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks/tag/{{task_id}}",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks", "tag", "{{task_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "task-delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3001/api/tasks/{{task_id}}",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "3001",
+          "path": ["api", "tasks", "{{task_id}}"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "task_id",
+      "value": ""
+    }
+  ]
+}
