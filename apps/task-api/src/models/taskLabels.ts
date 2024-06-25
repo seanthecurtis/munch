@@ -5,13 +5,6 @@ import { LabelModel } from "./labels"
 @Table({
   tableName: "task_labels",
   timestamps: true,
-  indexes: [
-    {
-      unique: true,
-      fields: ["taskId", "labelId"],
-      name: "u_task_label"
-    },
-  ],
 })
 export class TaskLabelModel extends Model<TaskLabelModel> {
   @ForeignKey(() => TaskModel)

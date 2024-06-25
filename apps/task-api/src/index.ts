@@ -6,6 +6,7 @@ import { fastifyCookie } from "@fastify/cookie"
 import fastifyJwt from "@fastify/jwt"
 import Ajv from "ajv"
 import ajvErrors from "ajv-errors"
+import cors from "@fastify/cors"
 
 // Add ajv to validate payload fields
 const ajv = new Ajv({
@@ -24,10 +25,17 @@ const server = fastify({
 })
 
 // Function to start the server
-const start = async () => {
+export const start = async () => {
   try {
     // Create connection to database
     await sequelize.sync({alter: true})
+
+    // Register CORS plugin
+    server.register(cors, { 
+      origin: "*", // Allow all origins. Update this when moving away from a dev env
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
+    })
 
     // Add healcheck api
     server.get("/healthcheck", async(_: FastifyRequest, reply: FastifyReply)=>{

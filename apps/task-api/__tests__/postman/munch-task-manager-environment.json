@@ -1,0 +1,39 @@
+{
+	"id": "b69338b5-91ae-44ec-9648-21625cfdc1a4",
+	"name": "munch local",
+	"values": [
+		{
+			"key": "host",
+			"value": "http://localhost:3001/api",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "x-api-key",
+			"value": "7d620176-966f-4bad-a8a9-d8d493bf35d8",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "email",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "task_id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2024-06-25T21:47:14.826Z",
+	"_postman_exported_using": "Postman/11.2.13"
+}

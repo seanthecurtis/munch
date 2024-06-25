@@ -40,6 +40,7 @@ export class LabelService {
         include: {
           model: TaskModel,
           through: { where: {taskId}, attributes: [] },
+          attributes: [],
           required: true
         },
         attributes: ["id", "label"]
