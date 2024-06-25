@@ -8,6 +8,7 @@ import { LabelModel } from "../models/labels"
 // Initialize database connection
 const sequelize = new Sequelize({
   ...db,
+  logging: true,
   models: [UserModel, TaskModel, TaskLabelModel, LabelModel],
 })
 
