@@ -14,7 +14,8 @@ export class AuthService {
     try {
       const password = await this.hashPassword(userData.password as string)
       userData.password = password
-      return await UserModel.create(userData as UserModel)
+      const user = await UserModel.create(userData as UserModel)
+      return user.toJSON() || null
     } catch (err) {
       return null
     }
@@ -31,7 +32,7 @@ export class AuthService {
       // Validate password against hash
       const passwordValid = await this.verifyPassword(password as string, user.password as string)
       if(!passwordValid) return null
-      return user
+      return user.toJSON() || null
     }catch(err){
       return null
     }

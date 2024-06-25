@@ -17,6 +17,7 @@ export type Task = {
   description?: string,
   priority?: string,
   dueDate: string,
+  labels?: array,
   status?: string,
   createdAt?: string
   updatedAt?: string
@@ -54,4 +55,9 @@ export type TaskListFilters = {
   status?: string
   priorityOrder?: string
   dueDateOrder?: string
+}
+
+export type TaskLabel = {
+  taskId?: string,
+  labelId?: string
 }

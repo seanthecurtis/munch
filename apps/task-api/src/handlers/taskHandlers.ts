@@ -1,11 +1,10 @@
 import { FastifyRequest, FastifyReply } from "fastify"
-import { JwtTokenData, ParamGeneric, Task, TaskQueryParams, TaskStatusUpdate, TaskListFilters } from "../types/default"
+import { JwtTokenData, ParamGeneric, Task, TaskQueryParams, TaskStatusUpdate, TaskListFilters, Label } from "../types/default"
 import { ErrorHandler } from "../helpers/errorHandler"
 import { HttpError } from "../types/interfaces"
 import { TaskService } from "../services/taskService"
 import { UserService } from "../services/userService"
 import { LabelService } from "../services/labelService"
-import { LabelModel } from "../models/labels"
 import { TaskLabelService } from "../services/taskLabelService"
 import { TaskLabelModel } from "../models/taskLabels"
 
@@ -31,7 +30,7 @@ export class TaskHandler{
       
       if(!result) throw {statusCode: 400, message: "Failed to create task"} as HttpError
       
-      reply.status(201).send({message: "Task created"})
+      reply.status(201).send({message: "Task created", id: result.id})
     } catch (err) {
       await this.errorHandler.httpErrorHandler(reply, err as HttpError)
     }
@@ -64,9 +63,15 @@ export class TaskHandler{
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
 
-      // Query teh database with user and task ids
       const task = await this.taskService.taskGetOneService(userId, id)
       if(!task) throw {statusCode: 404, message: "Task not found"} as HttpError
+
+      const labelService = new LabelService
+      const labels = await labelService.labelsByTask(id)
+
+      // Attach labels to task object
+      task.labels = labels
+
       reply.status(200).send({message: "Task found", task})
     } catch (err) {
       await this.errorHandler.httpErrorHandler(reply, err as HttpError)
@@ -147,7 +152,7 @@ export class TaskHandler{
   taskLabelAddHandler = async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const payload = request.body as string[]
-      const labels = payload.map(label=>({label: label})) as LabelModel[]
+      const labels = payload.map(label=>({label: label})) as Label[]
       const { userId } = request.user as JwtTokenData
       const {id} = request.params as ParamGeneric
 
