@@ -69,6 +69,6 @@ dist
 node_modules
 
 # Local items
-.env
+# .env # should not store env files in the repo
 .tap
 local_notes
